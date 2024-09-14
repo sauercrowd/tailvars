@@ -4,23 +4,18 @@ A simple tailwind inspired syntax, letting you directly assign css variables to 
 
 ## Example
 ```html
-<div x-css-vars="p--1 hover:bg--gray-500 margin-right--4">...</div>
+<div x-css-vars="p--1 pl-[8px] hover:bg--gray-500 margin-right--4">...</div>
 ```
 
 Is an equivalent syntax to
 
 ```css
-{
-  padding: var(--1);
-  padding-left: 8px;
-}
+padding: var(--1);
+padding-left: 8px;
+margin-right: var(--4);
 
 :hover {
    background: var(--gray-500);
-}
-
-@media (min-width: 360px) {
-  padding-right: var(--8);
 }
 ```
 
