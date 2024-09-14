@@ -1,6 +1,6 @@
 # varwind
 
-A simple tailwind inspired syntax, letting you directly assign css variables to dom elements through attributes
+A simple tailwind inspired syntax, letting you directly assign css variables to elements through attributes
 
 ## Example
 ```html
