@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web Page</title>
+    <link rel="stylesheet" href="./tailwindstyles.css" >
+    <script src="./varwind.js"></script>
+</head>
+<body>
+   <script>0</script>
+    <header>
+        <h1>Welcome to My Web Page</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <h2>Home</h2>
+            <p x-css-vars="bg--gray-500 hover:p--4 @lg:bg--green-500">This is the main content of your home section.</p>
+        </section>
+
+        <section id="about">
+            <h2 x-css-vars="p--2 m-[4px] hover:pl--8">About</h2>
+            <p>Information about you or your website goes here.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Your contact information or a contact form can be placed here.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>
