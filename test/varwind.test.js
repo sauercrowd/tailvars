@@ -15,18 +15,21 @@ describe('Varwind Library Tests', () => {
   let port;
 
   beforeAll(async () => {
-    server = spawn('npx', ['http-server', '-p', '0', '.'], { shell: true });
 
-    // Extract the port from the server output
-    await new Promise((resolve) => {
-      server.stdout.on('data', (data) => {
-        const match = data.toString().match(/Available on:\s+http:\/\/127\.0\.0\.1:(\d+)/);
-        if (match) {
-          port = match[1];
-          resolve();
-        }
-      });
-    });
+    server = spawn('npx', ['http-server', '-p', '8080', '.'], { shell: true });
+
+      port = 8080;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    //// Extract the port from the server output
+    //await new Promise((resolve) => {
+    //  server.stdout.on('data', (data) => {
+    //    const match = data.toString().match(/Available on:\s+http:\/\/127\.0\.0\.1:(\d+)/);
+    //    if (match) {
+    //      port = match[1];
+    //      resolve();
+    //    }
+    //  });
+    //});
 
 
     await waitOn({ resources: [`http://localhost:${port}`] });
