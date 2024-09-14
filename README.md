@@ -24,7 +24,7 @@ Is an equivalent syntax to
 }
 ```
 
-(We used a few shorthands here such as `p` - these are aliases that can be configured, we could have used any css property directly as well like `padding-right--8`)
+(We used a few shorthands here such as `p` - these are aliases that can be configured, we could have used any css property directly as well like `margin-right--8`)
 
 ### Advantages
 - no build step
