@@ -87,33 +87,33 @@ function resolveCssValue(value){
     const maybeSplittedVar = value.split('--');
 
     if(maybeSplittedVar.length == 2){
-	const [propertyOrAlias, value] = maybeSplittedVar;
+        const [propertyOrAlias, value] = maybeSplittedVar;
 
-	const property = resolveAlias(propertyOrAlias);
+        const property = resolveAlias(propertyOrAlias);
 
-	if(property instanceof Array){
-	    return property.map((p) => ({p, v: `var(--${value})`}))
-	}
+        if(property instanceof Array){
+            return property.map((p) => ({p, v: `var(--${value})`}))
+        }
 
-	return [{p: property, v: `var(--${value})`}]
+        return [{p: property, v: `var(--${value})`}]
     }
 
     const maybeSplittedLiteral = value.split('-[');
 
     if(maybeSplittedLiteral.length == 2){
-	const [propertyOrAlias, rawValue] = maybeSplittedLiteral;
+        const [propertyOrAlias, rawValue] = maybeSplittedLiteral;
 
-	const value = rawValue.slice(0, -1); // strip last character ']'
+        const value = rawValue.slice(0, -1); // strip last character ']'
 
-	const property = resolveAlias(propertyOrAlias);
-
-
-	if(property instanceof Array){
-	    return property.map((p) => ({p, v: value}))
-	}
+        const property = resolveAlias(propertyOrAlias);
 
 
-	return [{p: property, v: value}]
+        if(property instanceof Array){
+            return property.map((p) => ({p, v: value}))
+        }
+
+
+        return [{p: property, v: value}]
     }
 
     console.error('Invalid tailvars value', value);
@@ -126,20 +126,20 @@ function createTreeForMediaQuery(parsedStyleDefinitions) {
     const tree = {};
 
     for(const { mediaQuery, prefix, value } of parsedStyleDefinitions){
-	const mediaKey = mediaQuery || NOT_SET_KEY;
-	const prefixKey = prefix || NOT_SET_KEY;
+        const mediaKey = mediaQuery || NOT_SET_KEY;
+        const prefixKey = prefix || NOT_SET_KEY;
 
-	if (tree[mediaKey] === undefined) {
-	    tree[mediaKey] = {};
-	}
+        if (tree[mediaKey] === undefined) {
+            tree[mediaKey] = {};
+        }
 
-	if(tree[mediaKey][prefixKey] === undefined){
-	    tree[mediaKey][prefixKey] = [];
-	}
+        if(tree[mediaKey][prefixKey] === undefined){
+            tree[mediaKey][prefixKey] = [];
+        }
 
-	for(const item of resolveCssValue(value)){
-	    tree[mediaKey][prefixKey].push(item);
-	}
+        for(const item of resolveCssValue(value)){
+            tree[mediaKey][prefixKey].push(item);
+        }
     }
     return tree;
 }
@@ -167,11 +167,23 @@ function resolveAlias(alias){
            alias;
 }
 
-const ELEMENT_TO_CLASS_MAP = new WeakMap();
+const attrStringToClassName = new Map();
+
+const initialSylesAdded = new Set();
 
 function applyStyles(targetElements){
     for(const element of targetElements){
-	const attributeValue = element.getAttribute(ATTRIBUTE_NAME);
+    // determine classname
+    const attributeValue = element.getAttribute(ATTRIBUTE_NAME);
+
+    if(attrStringToClassName.has(attributeValue)){
+        const generatedClassName = attrStringToClassName.get(attributeValue);
+        element.classList.add(generatedClassName);
+        return;
+    }
+
+    const generatedClassName = generateClassName();
+    attrStringToClassName.set(attributeValue, generatedClassName);
 
 	const parsedStyleDefinitions = processAttributeValue(attributeValue);
 
@@ -180,100 +192,77 @@ function applyStyles(targetElements){
 	let moreSpecificClassContent = '';
 	let leastSpecificClassContent = '';
 
-	let styles = {};
-
-	let generatedClassName = undefined;
+    const styles = {};
 
 	for(const mediaQuery of Object.keys(mediaQueryTree)){
 	    const mediaQueryStyles = mediaQueryTree[mediaQuery];
 
 	    for(const prefix of Object.keys(mediaQueryStyles)){
-		const styleDefinitions = mediaQueryStyles[prefix];
+            const styleDefinitions = mediaQueryStyles[prefix];
 
-		if(prefix === NOT_SET_KEY && mediaQuery === NOT_SET_KEY){
-		    for(const {p, v} of styleDefinitions){
-			styles[p] = v;
-		    }
+            let currentClassContent = "";
 
-		}else{
-		    // determine classname
-		    if(!ELEMENT_TO_CLASS_MAP.has(element)){
+            if(mediaQuery === NOT_SET_KEY && prefix === NOT_SET_KEY){
+                for(const {p, v} of styleDefinitions){
+                    styles[p] = v;
+                }
+                continue;
+            }
 
-			let generatedClassName = generateClassName();
-			ELEMENT_TO_CLASS_MAP.set(element, generatedClassName);
+            if(mediaQuery !== NOT_SET_KEY){
+            const cssMediaQuery = resolveMediaQuery(mediaQuery);
+            currentClassContent += `@media ${cssMediaQuery} { \n`;
+            }
 
-			const styleElement = document.createElement('style');
-			styleElement.classList.add(generatedClassName);
-			document.head.appendChild(styleElement);
-		    }
+            if(prefix !== NOT_SET_KEY){
+                // translate prefix to css selector
+                const cssPrefix = resolvePrefix(prefix);
+                currentClassContent += `.${generatedClassName}${cssPrefix} { \n`;
+            }else{
+                currentClassContent += `.${generatedClassName} { \n`;
+            }
 
-		    generatedClassName = ELEMENT_TO_CLASS_MAP.get(element);
+            for(const {p, v} of styleDefinitions){
+                currentClassContent += `${p}: ${v}; \n`;
+            }
 
-		    let currentClassContent = "";
+            currentClassContent += "}\n";
 
-		    if(mediaQuery !== NOT_SET_KEY){
-			const cssMediaQuery = resolveMediaQuery(mediaQuery);
-			currentClassContent += `@media ${cssMediaQuery} { \n`;
-		    }
+            if(mediaQuery !== NOT_SET_KEY){
+                currentClassContent += "}";
+            }
 
-		    if(prefix !== NOT_SET_KEY){
-			// translate prefix to css selector
-			const cssPrefix = resolvePrefix(prefix);
-			currentClassContent += `.${generatedClassName}${cssPrefix} { \n`;
-		    }else{
-			currentClassContent += `.${generatedClassName} { \n`;
-		    }
-
-		    for(const {p, v} of styleDefinitions){
-			currentClassContent += `${p}: ${v}; \n`;
-		    }
-
-		    currentClassContent += "}\n";
-
-		    if(mediaQuery !== NOT_SET_KEY){
-			currentClassContent += "}";
-		    }
-
-		    if(prefix !== NOT_SET_KEY && mediaQuery === NOT_SET_KEY){
-			moreSpecificClassContent += currentClassContent + " ";
-		    }else{
-			leastSpecificClassContent += currentClassContent + " ";
-		    }
-
-		}
+            if(prefix !== NOT_SET_KEY && mediaQuery === NOT_SET_KEY){
+                moreSpecificClassContent += currentClassContent + " ";
+            }else{
+                leastSpecificClassContent += currentClassContent + " ";
+            }
 	    }
 	}
 
 	let prefixClassContent = "";
 
-	const useClass = leastSpecificClassContent !== '' || moreSpecificClassContent !== ''
-
-	if(useClass){
-	    prefixClassContent += "\n";
-	    prefixClassContent += `.${generatedClassName} { \n`;
-	}
+    prefixClassContent += "\n";
+    prefixClassContent += `.${generatedClassName} { \n`;
 
 	for (const [key, value] of Object.entries(styles)) {
-	    if(!useClass){
-		element.style.setProperty(key, value);
-	    }else{
 		prefixClassContent += `${key}: ${value}; \n`;
-	    }
 	}
 
-	if(useClass){
-	    prefixClassContent += "}\n";
-	}
+    prefixClassContent += "}\n";
 
 	const classContent = prefixClassContent + leastSpecificClassContent + moreSpecificClassContent;
 
-	if(!useClass){
-	    return;
-	}
+    // let styleElement = document.querySelector(`style.${generatedClassName}`); // TODO: probably remove
+    let styleElement = document.querySelector(`style.varwind-styles`);
 
-	// add styles to the style element
-	const styleElement = document.querySelector(`style.${generatedClassName}`);
-	styleElement.innerHTML = classContent;
+    if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.classList.add('varwind-styles');
+        document.head.appendChild(styleElement);
+    }
+
+	styleElement.innerHTML += classContent;
 
 	// attach the class to the element
 	element.classList.add(generatedClassName);
@@ -334,14 +323,23 @@ function setupObserver(){
     });
 }
 
+requestAnimationFrame(() => {
+  initializeStyles();
+});
+
+
+// hide the page until the styles are applied
+const htmlElement = document.getElementsByTagName("html")[0];
+htmlElement.style.display = 'none';
+
 // Start observing the document with the configured parameters
 if (document.readyState === 'loading') {
-  // If not, add an event listener
     document.addEventListener('DOMContentLoaded', () => {
         onStylesheetsLoaded(() => {
-                initializeStyles();
+            initializeStyles();
             setupObserver();
-                handleDevToolsChanges();
+            handleDevToolsChanges();
+            htmlElement.style.display = '';
         });
     });
 } else {
@@ -349,6 +347,7 @@ if (document.readyState === 'loading') {
         initializeStyles();
         setupObserver();
         handleDevToolsChanges();
+        htmlElement.style.display = '';
     });
 }
 
