@@ -20,27 +20,10 @@ window.VARWIND_DEFAULT_PROPERTY_ALIASES = {
 window.VARWIND_EXTRA_PROPERTY_ALIASES = {}
 
 window.VARWIND_DEFAULT_PREFIX_ALIASES = {
-    'hover': ':hover',
-    'focus': ':focus',
-    'active': ':active',
-    'disabled': ':disabled',
     'after': '::after',
     'before': '::before',
-    'first-child': ':first-child',
-    'last-child': ':last-child',
     'odd': ':nth-child(odd)',
     'even': ':nth-child(even)',
-    'enabled': ':enabled',
-    'checked': ':checked',
-    'valid': ':valid',
-    'invalid': ':invalid',
-    'required': ':required',
-    'indeterminate': ':indeterminate',
-    'visited': ':visited',
-    'empty': ':empty',
-    'default': ':default',
-    'fullscreen': ':fullscreen',
-    'autofill': ':autofill',
 }
 
 window.VARWIND_EXTRA_PREFIX_ALIASES = {}
@@ -87,10 +70,10 @@ function processAttributeValue(value) {
             if (index === utilityParts.length - 1) {
             value = part;
             } else if (part.startsWith('@')) {
-            hasMediaQuery = true;
-            mediaQuery = part;
+                hasMediaQuery = true;
+                mediaQuery = part;
             } else {
-            prefix = part;
+                prefix = part;
             }
         }
 
@@ -174,7 +157,7 @@ function resolveMediaQuery(mediaQueryRaw){
 function resolvePrefix(prefix){
     return window.VARWIND_EXTRA_PREFIX_ALIASES[prefix] ||
            window.VARWIND_DEFAULT_PREFIX_ALIASES[prefix] ||
-           prefix;
+           `:${prefix}`;
 }
 
 

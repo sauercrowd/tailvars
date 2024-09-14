@@ -24,18 +24,6 @@ Generates a class such as
 }
 ```
 
-The syntax is the following
-```
-@maybeMediaQuery:maybePrefix:propertyNameOrAlias--varName
-```
-
-Or for literal values
-```
-@maybeMediaQuery:maybePrefix:propertyNameOrAlias-[literalValue]
-```
-
-Aliases are both available for prefixes (pseudo elements or classes) and properties, and are preset per default (e.g. `p` --> `padding` and `hover` --> `:hover`), but can be overriden or removed easily.
-
 
 ### Advantages
 - no build step
@@ -43,25 +31,23 @@ Aliases are both available for prefixes (pseudo elements or classes) and propert
 - predictable syntax
 - extensible through regular additional stylesheets
 
+## Setup
+```html
+<html>
+  <head>
+    <!-- you can also define your own variables inline, use other stylesheets defining css variables or add more -->
+    <link rel="stylesheet" href="./tailwindstyles.css">
+    <script src="./tailvars.js"></script>
+  </head>
+  <body>
+    <div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8">...</div>
+  </body>
+</html>
+```
+
 ### Configuration
 
-*Media Queries*
-
-Are defined on the object `window.VARWIND_DEFAULT_MEDIA_QUERIES` and can be extended through `window.VARWIND_EXTRA_MEDIA_QUERIES`.
-To disable the preset media queries simply override the default configuration.
-
-Current defaults:
-```
-window.VARWIND_DEFAULT_MEDIA_QUERIES = {
-    'sm': '(min-width: 640px)',
-    'md': '(min-width: 768px)',
-    'lg': '(min-width: 1024px)',
-    'xl': '(min-width: 1280px)',
-}
-```
-
-
-*Properties*
+#### Properties
 Are defined on the object `window.VARWIND_DEFAULT_PROPERTY_ALIASES` and can be extended through `window.VARWIND_EXTRA_PROPERTY_ALIASES`.
 If no alias is found, the literal value will be used (so any css property is availabe with the default config).
 They can map to either a string or an array. If it's an array, all properties will be set to the value used.
@@ -90,35 +76,33 @@ window.VARWIND_DEFAULT_PROPERTY_ALIASES = {
 }
 ```
 
+#### Media Queries
 
-*Prefixes*
+Are defined on the object `window.VARWIND_DEFAULT_MEDIA_QUERIES` and can be extended through `window.VARWIND_EXTRA_MEDIA_QUERIES`.
+To disable the preset media queries simply override the default configuration.
 
-Are defined on the object `window.VARWIND_DEFAULT_PREFIXES` and can be extended through `window.VARWIND_EXTRA_PREFIXES`.
-To disable the preset prefixes simply override the default configuration
+Current defaults:
+```
+window.VARWIND_DEFAULT_MEDIA_QUERIES = {
+    'sm': '(min-width: 640px)',
+    'md': '(min-width: 768px)',
+    'lg': '(min-width: 1024px)',
+    'xl': '(min-width: 1280px)',
+}
+```
+
+
+#### Prefixes
+
+Are defined on the object `window.VARWIND_DEFAULT_PREFIX_ALIASES` and can be extended through `window.VARWIND_EXTRA_PREFIX_ALIASES`.
+To disable the preset prefixes simply override the default configuration. Any element that doesnt match will be treated as a pseudo class (`hover` -> `:hover`).
 
 Current defaults
 ```
-window.VARWIND_DEFAULT_PREFIXES= {
-    'hover': ':hover',
-    'focus': ':focus',
-    'active': ':active',
-    'disabled': ':disabled',
+window.VARWIND_DEFAULT_PREFIX_ALIASES= {
     'after': '::after',
     'before': '::before',
-    'first-child': ':first-child',
-    'last-child': ':last-child',
     'odd': ':nth-child(odd)',
     'even': ':nth-child(even)',
-    'enabled': ':enabled',
-    'checked': ':checked',
-    'valid': ':valid',
-    'invalid': ':invalid',
-    'required': ':required',
-    'indeterminate': ':indeterminate',
-    'visited': ':visited',
-    'empty': ':empty',
-    'default': ':default',
-    'fullscreen': ':fullscreen',
-    'autofill': ':autofill',
 }
 ```
