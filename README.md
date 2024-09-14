@@ -32,6 +32,9 @@ Is an equivalent syntax to
 - predictable syntax
 - extensible through regular additional stylesheets
 
+### Disadvantages
+- requires Javascript to generate styles/classes on the client
+
 ## Setup
 ```html
 <html>
