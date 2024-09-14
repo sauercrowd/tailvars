@@ -16,9 +16,10 @@ describe('Varwind Library Tests', () => {
 
   beforeAll(async () => {
 
-    server = spawn('npx', ['http-server', '-p', '8080', '.'], { shell: true });
+    //server = spawn('npx', ['http-server', '-p', '8080', '.'], { shell: true });
+      server = spawn('python', ['-m', 'http-server'], {shell: true});
 
-      port = 8080;
+      port = 8000;
       await new Promise((resolve) => setTimeout(resolve, 1000));
     //// Extract the port from the server output
     //await new Promise((resolve) => {
