@@ -1,0 +1,13 @@
+{
+  "name": "varwind",
+  "version": "1.0.0",
+  "description": "Tailwind-style syntax for CSS variables",
+  "scripts": {
+    "test": "cd test && jest --forceExit --testTimeout=15000"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "puppeteer": "^23.3.0",
+    "wait-on": "^8.0.1"
+  }
+}
