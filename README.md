@@ -4,7 +4,7 @@ A simple tailwind inspired syntax, letting you directly assign css variables to 
 
 ## Example
 ```html
-<div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8">...</div>
+<div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8 margin-right--4">...</div>
 ```
 
 Is an equivalent syntax to
