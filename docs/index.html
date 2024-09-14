@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varwind - Tailwind Inspired CSS Variables Library</title>
+    <link rel="stylesheet" href="./tailwindstyles.css">
+    <script src="./varwind.js"></script>
+    <style>
+        :root {
+            --blue-500: #3b82f6;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-800: #1f2937;
+            --8: 2rem;
+            --16: 4rem;
+            --24: 6rem;
+            --32: 8rem;
+            --radius-lg: 1rem;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --gradient-pink-white: linear-gradient(to left top, var(--purple-400), var(--pink-300), white);
+        }
+    </style>
+    <script>
+        window.VARWIND_EXTRA_PROPERTY_ALIASES = {
+            ...window.VARWIND_EXTRA_PROPERTY_ALIASES,
+            'rounded': 'border-radius',
+        }
+    </script>
+</head>
+<body x-css-vars="font-family--font-family-sans bg--gray-100 color--gray-800 m--0 p--0">
+    <header x-css-vars="text-align-[center] py--32 background-image--gradient-pink-white">
+        <h1 x-css-vars="color--blue-500 font-size--font-size-6xl mb--8">
+            <span x-css-vars="color--white mr-[0.5rem]">--</span>varwind
+        </h1>
+        <p x-css-vars="font-size--font-size-xl max-width-[800px] mx-[auto]">A Tailwind-inspired library letting you use CSS variables through DOM elements</p>
+    </header>
+    <main x-css-vars="mt--16 max-width-[1200px] mx-[auto] px--16">
+        <section x-css-vars="display-[flex] flex-[wrap] justify-content-[center] gap--24 mb--32">
+            <div x-css-vars="bg--white p--16 rounded--radius-lg shadow--shadow-md flex-[1] min-width-[300px]">
+                <h2 x-css-vars="font-size--font-size-2xl mb--8">No Build Step</h2>
+                <p>Use CSS variables directly in your HTML without a compilation process.</p>
+            </div>
+            <div x-css-vars="bg--white p--16 rounded--radius-lg shadow--shadow-md flex-[1] min-width-[300px]">
+                <h2 x-css-vars="font-size--font-size-2xl mb--8">Excellent DevTool Support</h2>
+                <p>Chrome DevTools support CSS variable exploration for easy debugging.</p>
+            </div>
+            <div x-css-vars="bg--white p--16 rounded--radius-lg shadow--shadow-md flex-[1] min-width-[300px]">
+                <h2 x-css-vars="font-size--font-size-2xl mb--8">Familiar Syntax</h2>
+                <p>Straightforward mapping of CSS properties to varwind names.</p>
+                <p x-css-vars="mt--8">Example:</p>
+                <pre x-css-vars="white-space-[break-spaces] bg--gray-100 p--8 rounded--radius-lg"><code>&lt;div x-css-vars="pl--3 bg--blue-500"&gt;...&lt;/div&gt;</code></pre>
+                <p x-css-vars="mt--8">Equivalent to:</p>
+                <pre x-css-vars="bg--gray-100 p--8 rounded--radius-lg"><code>padding-left: var(--3);
+background: var(--blue-500);</code></pre>
+            </div>
+        </section>
+
+        <section x-css-vars="bg--white p--24 rounded--radius-lg shadow--shadow-md mb--32">
+            <h2 x-css-vars="font-size--font-size-3xl mb--16">Other Features</h2>
+            <ul x-css-vars="list-style-[disc] pl--24">
+                <li x-css-vars="mb--8">Mix and extend different stylesheets</li>
+                <li x-css-vars="mb--8">Naturally scoped (CSS variables can be specific for the root but overwritten with more specific definitions)</li>
+                <li x-css-vars="mb--8">Easy to convert to component classes when required</li>
+            </ul>
+        </section>
+
+        <section x-css-vars="bg--white p--24 rounded--radius-lg shadow--shadow-md">
+            <h2 x-css-vars="font-size--font-size-3xl mb--16">Works with</h2>
+            <ul x-css-vars="list-style-type-[none] p--0">
+                <li x-css-vars="mb--8">
+                    <a href="https://open-props.style" x-css-vars="color--blue-500 hover:text-decoration-[underline]">Openprops</a>
+                </li>
+                <li x-css-vars="mb--8">
+                    <a href="https://www.pollen.style/" x-css-vars="color--blue-500 hover:text-decoration-[underline]">Pollen</a>
+                </li>
+                <li x-css-vars="mb--8">...and any other stylesheet defining CSS variables</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer x-css-vars="text-align-[center] py--24 mt--32">
+        <p x-css-vars="font-size--font-size-sm">© 2024 Varwind. All rights reserved.</p>
+    </footer>
+</body>
+</html>
