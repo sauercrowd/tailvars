@@ -1,50 +1,83 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
+const { spawn } = require('child_process');
+const waitOn = require('wait-on');
+
+// copy varwind.js from root to this folder
+const fs = require('fs');
+fs.copyFileSync(path.join(__dirname, '../varwind.js'), path.join(__dirname, 'varwind.js'));
+
 
 describe('Varwind Library Tests', () => {
   let browser;
   let page;
+  let server;
+  let port;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch();
-    page = await browser.newPage();
-    await page.goto(`file:${path.join(__dirname, 'test.html')}`);
+    server = spawn('npx', ['http-server', '-p', '0', '.'], { shell: true });
+
+    // Extract the port from the server output
+    await new Promise((resolve) => {
+      server.stdout.on('data', (data) => {
+        const match = data.toString().match(/Available on:\s+http:\/\/127\.0\.0\.1:(\d+)/);
+        if (match) {
+          port = match[1];
+          resolve();
+        }
+      });
+    });
+
+
+    await waitOn({ resources: [`http://localhost:${port}`] });
+
+    browser =  await puppeteer.launch({
+        args: process.env.DISABLE_SANDBOX ? ['--no-sandbox', '--disable-setuid-sandbox'] : undefined,
+    });
+
+      page = await browser.newPage({viewport: {width: 600, height: 600}});
+      await page.goto(`http://localhost:${port}/test.html`);
   });
 
   afterAll(async () => {
     await browser.close();
+    server.kill();
   });
 
-  test('Basic styles are applied correctly', async () => {
-    const styles = await page.evaluate(() => {
-      const element = document.getElementById('test-element');
-      return window.getComputedStyle(element);
-    });
+  const getEffectiveStyle = async (selector, property) => {
+    return page.evaluate((selector, property) => {
+      const element = document.querySelector(selector);
+      const computedStyle = window.getComputedStyle(element);
+      return computedStyle.getPropertyValue(property).trim();
+    }, selector, property);
+  };
 
-    expect(styles.padding).toBe('4px');
-    expect(styles.paddingLeft).toBe('8px');
-    expect(styles.backgroundColor).toBe('rgb(239, 239, 239)');
+  test('Basic styles are applied correctly', async () => {
+    // Wait for any potential hover effect to be applied
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    expect(await getEffectiveStyle('#test-element', 'padding')).toBe('4px 32px 4px 8px');
+    expect(await getEffectiveStyle('#test-element', 'padding-left')).toBe('8px');
+    expect(await getEffectiveStyle('#test-element', 'background-color')).toBe('rgb(239, 239, 239)');
   });
 
   test('Hover styles are applied correctly', async () => {
     await page.hover('#test-element');
 
-    const hoverStyles = await page.evaluate(() => {
-      const element = document.getElementById('test-element');
-      return window.getComputedStyle(element);
-    });
+    // Wait for any potential hover effect to be applied
+    await new Promise((resolve) => setTimeout(resolve, 100))
 
-    expect(hoverStyles.backgroundColor).toBe('rgb(107, 114, 128)');
+    const hoverBgColor = await getEffectiveStyle('#test-element', 'background-color');
+    expect(hoverBgColor).toBe('rgb(107, 114, 128)');
   });
 
   test('Media query styles are applied correctly', async () => {
     await page.setViewport({ width: 800, height: 600 });
 
-    const mediaQueryStyles = await page.evaluate(() => {
-      const element = document.getElementById('test-element');
-      return window.getComputedStyle(element);
-    });
+    // Wait for any potential media query styles to be applied
+    await new Promise((resolve) => setTimeout(resolve, 100))
 
-    expect(mediaQueryStyles.paddingRight).toBe('32px');
+    const paddingRight = await getEffectiveStyle('#test-element', 'padding-right');
+    expect(paddingRight).toBe('32px');
   });
 });
