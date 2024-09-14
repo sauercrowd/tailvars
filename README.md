@@ -33,9 +33,11 @@ Is an equivalent syntax to
 - extensible through regular additional stylesheets
 - naturally scoped (css variables can be specific for the root but overwritten with more specific definitions)
 - easily convertible to user-defined component classes when needed (predictable syntax)
+- tokens (e.g. `ml-8`) dont have to treated as atoms but can be concatenated in react/backend/... (e.g. `"ml-" + marginLeftNumber`), since only evaluated once rendered on the client
 
 ### Disadvantages
 - requires Javascript to generate styles/classes on the client
+- 1:1 mapping - tailwind in some cases defines a utility class with multiple properties
 
 ## Setup
 ```html
