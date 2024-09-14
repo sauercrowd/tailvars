@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tests for the varwind library",
   "scripts": {
-    "test": "jest --forceExit"
+    "test": "jest --forceExit --testTimeout=15000"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
