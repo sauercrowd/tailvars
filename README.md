@@ -28,9 +28,11 @@ Is an equivalent syntax to
 
 ### Advantages
 - no build step
-- browser native css variable
+- browser native css variables (devtools can auto-complete the right property values and preview colors)
 - predictable syntax
 - extensible through regular additional stylesheets
+- naturally scoped (css variables can be specific for the root but overwritten with more specific definitions)
+- easily convertible to user-defined component classes when needed (predictable syntax)
 
 ### Disadvantages
 - requires Javascript to generate styles/classes on the client
