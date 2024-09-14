@@ -7,7 +7,7 @@ A tailwind inspired syntax, letting you directly assign css variables to dom ele
 <div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8">...</div>
 ```
 
-Generates a class such as
+Is an equivalent syntax to
 
 ```
 {
