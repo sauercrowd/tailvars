@@ -41,10 +41,15 @@ Is an equivalent syntax to
   <head>
     <!-- you can also define your own variables inline, use other stylesheets defining css variables or combine multiple options -->
     <link rel="stylesheet" href="./tailwindstyles.css">
+    <style>
+      :root {
+        --my-color: #efefef;
+      }
+    </style>
     <script src="./tailvars.js"></script>
   </head>
   <body>
-    <div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8">...</div>
+    <div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8 bg--my-color">...</div>
   </body>
 </html>
 ```
