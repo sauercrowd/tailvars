@@ -39,7 +39,7 @@ Is an equivalent syntax to
 ```html
 <html>
   <head>
-    <!-- you can also define your own variables inline, use other stylesheets defining css variables or add more -->
+    <!-- you can also define your own variables inline, use other stylesheets defining css variables or combine multiple options -->
     <link rel="stylesheet" href="./tailwindstyles.css">
     <script src="./tailvars.js"></script>
   </head>
