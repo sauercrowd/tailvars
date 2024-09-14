@@ -1,6 +1,6 @@
 {
   "name": "varwind",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Tailwind-style syntax for CSS variables",
   "scripts": {
     "test": "cd test && jest --forceExit --testTimeout=15000"

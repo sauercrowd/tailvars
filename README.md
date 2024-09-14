@@ -4,12 +4,12 @@ A simple tailwind inspired syntax, letting you directly assign css variables to 
 
 ## Example
 ```html
-<div x-css-vars="p--1 hover:bg--gray-500 pl-[8px] @sm:pr--8 margin-right--4">...</div>
+<div x-css-vars="p--1 hover:bg--gray-500 margin-right--4">...</div>
 ```
 
 Is an equivalent syntax to
 
-```
+```css
 {
   padding: var(--1);
   padding-left: 8px;
@@ -68,7 +68,7 @@ They can map to either a string or an array. If it's an array, all properties wi
 To disable the preset prefixes simply override the default configuration
 
 Current defaults
-```
+```javascript
 window.VARWIND_DEFAULT_PROPERTY_ALIASES = {
     'p': 'padding',
     'pl': 'padding-left',
@@ -95,7 +95,7 @@ Are defined on the object `window.VARWIND_DEFAULT_MEDIA_QUERIES` and can be exte
 To disable the preset media queries simply override the default configuration.
 
 Current defaults:
-```
+```javascript
 window.VARWIND_DEFAULT_MEDIA_QUERIES = {
     'sm': '(min-width: 640px)',
     'md': '(min-width: 768px)',
@@ -111,7 +111,7 @@ Are defined on the object `window.VARWIND_DEFAULT_PREFIX_ALIASES` and can be ext
 To disable the preset prefixes simply override the default configuration. Any element that doesnt match will be treated as a pseudo class (`hover` -> `:hover`).
 
 Current defaults
-```
+```javascript
 window.VARWIND_DEFAULT_PREFIX_ALIASES= {
     'after': '::after',
     'before': '::before',
