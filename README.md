@@ -114,3 +114,7 @@ window.VARWIND_DEFAULT_PREFIX_ALIASES= {
     'even': ':nth-child(even)',
 }
 ```
+
+### TODO
+- [ ] confirm dynamically inserted elements are styled properly and dont experience a FOUC
+- [ ] build tailwind styles
